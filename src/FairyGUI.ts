@@ -38,7 +38,8 @@ export * from "./ui/FieldTypes"
 
 export { DisplayObject } from "./core/DisplayObject";
 export { Image } from "./core/Image";
-export { MovieClip, Frame } from "./core/MovieClip";
+export { MovieClip } from "./core/MovieClip";
+export type { Frame } from "./core/MovieClip";
 export { Shape } from "./core/Shape";
 export { Stage } from "./core/Stage";
 export { NTexture } from "./core/NTexture";
