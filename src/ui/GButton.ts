@@ -38,6 +38,8 @@ export class GButton extends GComponent {
     private _down: boolean;
     private _over: boolean;
 
+    public get down(): boolean { return this._down; }
+
     constructor() {
         super();
 
