@@ -261,7 +261,7 @@ export class GObject {
     }
 
     public makeFullScreen(): void {
-        this.setSize(Decls.GRoot.inst.width, Decls.GRoot.inst.height);
+        this.setSize(Decls.GRoot.inst.width / Decls.GRoot.inst.scaleX, Decls.GRoot.inst.height / Decls.GRoot.inst.scaleY);
     }
 
     public get actualWidth(): number {
