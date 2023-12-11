@@ -78,7 +78,7 @@ export class Stage {
     public static getTouchPos(touchId?: number, ret?: Vector2): Vector2 {
         if (!ret)
             ret = new Vector2();
-        if (touchId == null || touchId == -1)
+        if (touchId == null || touchId === -1)
             ret.copy(_touchPos);
         else {
             let touch = getTouch(touchId);
@@ -91,8 +91,10 @@ export class Stage {
     }
 
     public static addTouchMonitor(touchId: number, target: EventDispatcher) {
-        let touch: TouchInfo = getTouch(touchId);
-        if (touch.touchMonitors.indexOf(target) == -1)
+        let touch = getTouch(touchId);
+        if (touch === undefined)
+            return;
+        if (touch.touchMonitors.indexOf(target) === -1)
             touch.touchMonitors.push(target);
     }
 
@@ -219,23 +221,23 @@ function init(renderer: Renderer, parameters?: StageInitParameters) {
     _touches = [];
     for (let i = 0; i < 5; i++)
         _touches.push(new TouchInfo());
-    if (!_touchscreen)
-        _touches[0].touchId = 0;
+    // if (!_touchscreen)
+    _touches[0].touchId = 0;
 
     _touchCount = 0;
     _touchPos = new Vector2();
 
-    if (_touchscreen) {
-        document.addEventListener('touchstart', ev => handleTouch(ev, 0), { passive: false });
-        document.addEventListener('touchend', ev => handleTouch(ev, 1), { passive: false });
-        document.addEventListener('touchmove', ev => handleTouch(ev, 2), { passive: false });
-        document.addEventListener('touchcancel', ev => handleTouch(ev, 3), { passive: false });
-    }
-    else {
-        document.addEventListener('mousedown', ev => handleMouse(ev, 0), { passive: false });
-        document.addEventListener('mouseup', ev => handleMouse(ev, 1), { passive: false });
-        document.addEventListener('mousemove', ev => handleMouse(ev, 2), { passive: false });
-    }
+    // if (_touchscreen) {
+    document.addEventListener('touchstart', ev => handleTouch(ev, 0), { passive: false });
+    document.addEventListener('touchend', ev => handleTouch(ev, 1), { passive: false });
+    document.addEventListener('touchmove', ev => handleTouch(ev, 2), { passive: false });
+    document.addEventListener('touchcancel', ev => handleTouch(ev, 3), { passive: false });
+    // }
+    // else {
+    document.addEventListener('mousedown', ev => handleMouse(ev, 0), { passive: false });
+    document.addEventListener('mouseup', ev => handleMouse(ev, 1), { passive: false });
+    document.addEventListener('mousemove', ev => handleMouse(ev, 2), { passive: false });
+    // }
     document.addEventListener('wheel', ev => handleWheel(ev), { passive: false });
 
     window.addEventListener('resize', onWindowResize, false);
@@ -249,21 +251,21 @@ function updateCanvasMatrix() {
     var element: HTMLElement = _canvas;
     var style = element.style;
 
-    if(style.paddingTop)
-        offsetY += parseInt(style.paddingTop,10);
+    if (style.paddingTop)
+        offsetY += parseInt(style.paddingTop, 10);
 
-    if(style.paddingLeft)
-        offsetX += parseInt(style.paddingTop,10);
-        
+    if (style.paddingLeft)
+        offsetX += parseInt(style.paddingTop, 10);
+
     do {
         offsetX += element.offsetLeft;
         offsetY += element.offsetTop;
         style = element.style;
 
-        if(style.borderLeftWidth)
+        if (style.borderLeftWidth)
             offsetX += parseInt(style.borderLeftWidth, 10);
 
-        if(style.borderTopWidth)
+        if (style.borderTopWidth)
             offsetY += parseInt(style.borderTopWidth, 10);
     } while (element = <HTMLElement>element.offsetParent);
 
@@ -332,7 +334,7 @@ function onWindowResize(evt?: UIEvent) {
 function is_touch_enabled() {
     return ('ontouchstart' in window) ||
         (navigator.maxTouchPoints > 0) ||
-        (navigator.msMaxTouchPoints > 0);
+        (navigator.maxTouchPoints > 0);
 }
 
 function handleMouse(ev: MouseEvent, type: number) {
@@ -414,15 +416,13 @@ function handleWheel(ev: WheelEvent): void {
     }
 }
 
-function getTouch(touchId: number): TouchInfo {
+function getTouch(touchId: number): TouchInfo | undefined {
     for (let j: number = 0; j < 5; j++) {
         let touch: TouchInfo = _touches[j];
         if (touchId == -1 && touch.touchId != -1
             || touchId != -1 && touch.touchId == touchId)
             return touch;
     }
-
-    return null;
 }
 
 function handleTouch(ev: TouchEvent, type: number) {
