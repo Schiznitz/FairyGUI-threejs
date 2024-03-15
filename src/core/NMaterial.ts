@@ -163,6 +163,6 @@ export class NMaterial extends ShaderMaterial {
         this.depthTest = false;
         this.side = DoubleSide;
         //this.wireframe = true;
-        this["isMeshBasicMaterial"] = true;
+        (<any>this)["isMeshBasicMaterial"] = true;
     }
 }
